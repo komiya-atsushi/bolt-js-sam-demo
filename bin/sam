@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ -z "${DOCKER_HOST:-}" ]]; then
+  if [[ ! -e /var/run/docker.sock ]]; then
+    # Workaround for https://github.com/aws/aws-sam-cli/issues/4329
+    docker_sock="$(readlink -f ~/)/.docker/run/docker.sock"
+  else
+    docker_sock="/var/run/docker.sock"
+  fi
+
+  DOCKER_HOST="unix://${docker_sock}"
+fi
+
+DOCKER_HOST="${DOCKER_HOST}" sam "$@"
