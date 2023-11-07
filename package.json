@@ -10,12 +10,12 @@
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
-    "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
