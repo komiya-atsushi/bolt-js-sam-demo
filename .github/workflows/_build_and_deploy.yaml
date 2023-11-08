@@ -1,0 +1,26 @@
+on:
+  workflow_call:
+    inputs:
+      role:
+        required: true
+        type: string
+
+jobs:
+  # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/deploying-using-github.html
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    # configure-aws-credentials requires `id-token: write` permission.
+    # https://github.com/aws-actions/configure-aws-credentials#oidc
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.role }}
+          aws-region: ap-northeast-1
+      - run: sam build
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
